@@ -1,0 +1,38 @@
+<div class="table-responsive">
+  <table class="table table-striped">
+    <caption>
+      List of equipements
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">NUM_ID EQUIPEMENT</th>
+        <th scope="col">Categorie</th>
+        <th scope="col">Date d'entree</th>
+        <th scope="col">Date de sortie</th>
+        <th scope="col">Etat</th>
+        <th scope="col">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let equipement of equipements">
+        <th scope="row">{{ equipement.num_id_equipement }}</th>
+        <td>{{ equipement.category }}</td>
+        <td>{{ equipement.entryDate | date }}</td>
+        <td>{{ equipement.exitDate | date }}</td>
+        <td>{{ equipement.state }}</td>
+        <td>
+          <button
+            [class]="
+              equipement.status == 'Actif'
+                ? 'btn btn-success btn-rounded'
+                : 'btn btn-danger btn-rounded'
+            "
+            disabled
+          >
+            {{ equipement.status }}
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

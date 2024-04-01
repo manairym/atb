@@ -1,0 +1,35 @@
+<div>
+  <!-- Bouton qui déclenche la fonction convetToPDF() lorsqu'il est cliqué -->
+  <!--<button class="btn btn-primary" (click)="convetToPDF()">-->
+  <!-- Icône représentant un fichier PDF -->
+  <i class="bx bxs-file-pdf"></i> Générer Historique PDF
+  <!--</button>-->
+</div>
+
+<div id="contentToConvert">
+  <table class="table table-striped">
+    <!-- En-tête du tableau -->
+    <thead>
+      <!-- Ligne d'en-tête avec les titres de colonnes -->
+      <tr>
+        <th scope="col">NUM_ID_EQUIPEMENT</th>
+        <th scope="col">NOMBRE DE MODIFICATIONS</th>
+        <th scope="col">ID UTILISATEUR</th>
+        <th scope="col">DATE DE PRISE</th>
+        <th scope="col">ETAT</th>
+        <th scope="col">DATE DE RETOUR</th>
+      </tr>
+    </thead>
+    <!-- Corps du tableau -->
+    <tbody>
+      <tr *ngFor="let history of historique">
+        <th scope="row">{{ history.num_id_equipement }}</th>
+        <td>{{ history.num_modification }}</td>
+        <td>{{ history.userId }}</td>
+        <td>{{ history.startDate | date }}</td>
+        <td>{{ history.status }}</td>
+        <td>{{ history.returnDate | date }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
