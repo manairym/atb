@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Equipemnt } from '../../../Models/equipemnt';
 import { DatePipe, NgForOf } from '@angular/common';
+import {EquipemetService} from "../../../Services/equipemet.service";
 @Component({
   selector: 'app-equipements',
   standalone: true,
@@ -9,22 +10,14 @@ import { DatePipe, NgForOf } from '@angular/common';
   styleUrl: './equipements.component.css',
 })
 export class EQUIPEMENTSComponent {
-  equipements: Equipemnt[] = [
-    {
-      num_id_equipement: 1,
-      category: 'Informatique',
-      entryDate: new Date(),
-      exitDate: new Date(),
-      state: 'Parfait',
-      status: 'Actif',
-    },
-    {
-      num_id_equipement: 2,
-      category: 'Mécanique',
-      entryDate: new Date(),
-      exitDate: new Date(),
-      state: 'Moyen',
-      status: 'Inactif',
-    },
-  ];
+  equipements: Equipemnt[] = [];
+  constructor(private equipemetService : EquipemetService) {
+    equipemetService.getAll().subscribe((data) => {
+        this.equipements = data;
+        console.log(data);
+      },
+      (error) => {
+        console.log(error);
+      });
+  }
 }

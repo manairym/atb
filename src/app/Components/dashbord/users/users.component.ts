@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Users } from '../../../Models/users';
+import { User } from '../../../Models/users';
 import { NgForOf, NgIf } from '@angular/common';
 import {
   FormControl,
@@ -12,6 +12,7 @@ import { ErrorsStateMatcher } from '../../../Models/ErrorStateMatcher';
 import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
+import {UserService} from "../../../Services/user.service";
 
 @Component({
   selector: 'app-users',
@@ -31,28 +32,18 @@ import { MatInput } from '@angular/material/input';
   styleUrl: './users.component.css',
 })
 export class UsersComponent {
-  users: Users[] = [
-    {
-      accountStatus: 'Suspended',
-      email: 'anasAtb.com',
-      fullName: 'Anas ATB',
-      id: 123,
-      identifier: 1252484215,
-      job: '',
-      phonenumber: '',
-      role: '',
-    },
-    {
-      accountStatus: 'Active',
-      email: 'anasAtb2.com',
-      fullName: 'Anas ATB2',
-      id: 12,
-      identifier: 1252484215,
-      job: '',
-      phonenumber: '',
-      role: '',
-    },
-  ];
+  users: User[] = [];
+  constructor(private userService: UserService) {
+    userService.getAll().subscribe(
+      (data) => {
+        this.users = data;
+        console.log(data);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
 
   // Add Form Variable and Functions
   // Form validators

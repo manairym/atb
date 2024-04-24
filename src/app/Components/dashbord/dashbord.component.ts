@@ -6,7 +6,8 @@ import { EntryService } from '../../Services/entry.service';
 import { TokenStorageService } from '../../Services/token.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatIcon } from '@angular/material/icon';
-import { Users } from '../../Models/users';
+import { User } from '../../Models/users';
+import {UserService} from "../../Services/user.service";
 
 @Component({
   selector: 'app-dashbord',
@@ -17,20 +18,15 @@ import { Users } from '../../Models/users';
 })
 export class DashbordComponent implements OnInit {
   LogoImgPath = '../../assets/img/atbLogo.png';
+  isLoggedIn:boolean = false;
 
   // Dark Mode or Light Mode
   darkMode: boolean = false;
 
   // User data object
-  userData: Users = {
-    accountStatus: '',
-    email: '',
-    fullName: 'foulen ben foulen',
-    id: 0,
-    identifier: 0,
-    phonenumber: '',
-    job: '',
-    role: '',
+  userData: User = {
+    email: "", firstName: "", id: 0, lastName: "", password: "", role: "", status: true
+
   };
 
   // Status variable
@@ -43,21 +39,28 @@ export class DashbordComponent implements OnInit {
     private tokenStorageService: TokenStorageService,
     private EService: EntryService,
     private sanitizer: DomSanitizer,
-    private MatSnackBar: MatSnackBar
+    private MatSnackBar: MatSnackBar,
+    private userService: UserService
   ) {
-    // Setting user role from token storage
-    this.userData.role = this.tokenStorageService.getRole() as string;
   }
 
   ngOnInit(): void {
+    this.isLoggedIn =!!this.tokenStorageService.getToken();
     // Method to initialize component
     this.refreshProfile();
   }
 
   // Method to refresh profile
   refreshProfile() {
-    //const userAuth = this.tokenStorageService.getUser();
-    this.getImage();
+    const userAuth = this.tokenStorageService.getUser();
+    this.getImage(userAuth as number);
+    this.userService.get(userAuth).subscribe((res: User) => {
+      this.userData = res;
+    },(error)=>{
+      this.MatSnackBar.open(error.error.message,'❌',{
+        duration: 3000
+      })
+    });
   }
 
   // Method to logout
@@ -71,14 +74,21 @@ export class DashbordComponent implements OnInit {
   }
 
   // Method to get user image
-  getImage() {
-    this.imageProfile =
-      'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp';
+  getImage(userId : number) {
+    this.userService.getFile(userId).subscribe(
+      (res: any) => {
+        let objectURL = URL.createObjectURL(res);
+        this.imageProfile = this.sanitizer.bypassSecurityTrustUrl(objectURL);
+      },
+      () => {
+        this.imageProfile =
+          'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp';
+      }
+    );
   }
 
   // Method to change mode (Dark Mode or Light Mode)
   modeChanges() {
     this.darkMode = !this.darkMode;
-    console.log(this.darkMode);
   }
 }

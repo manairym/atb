@@ -7,19 +7,21 @@ import {ErrorStateMatcher, ShowOnDirtyErrorStateMatcher} from "@angular/material
 import {MAT_SNACK_BAR_DEFAULT_OPTIONS} from "@angular/material/snack-bar";
 import {EntryService} from "./Services/entry.service";
 import {TokenStorageService} from "./Services/token.service";
-import {provideHttpClient} from "@angular/common/http";
+import {provideHttpClient, withInterceptors} from "@angular/common/http";
 import {DataService} from "./Services/data.service";
-import {authInterceptorProviders} from "./Interceptor/auth.interceptor";
+import {intAuthInterceptor} from "./Interceptor/int-auth.interceptor";
+import {provideClientHydration} from "@angular/platform-browser";
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(routes), provideAnimationsAsync(),
+    provideRouter(routes),
+    provideClientHydration(),
+    provideAnimationsAsync(),
     {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 3500}},
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher},
     EntryService,
     TokenStorageService,
-    provideHttpClient(),
-    authInterceptorProviders,
-    DataService,
+    provideHttpClient(withInterceptors([intAuthInterceptor])),
+    DataService, provideAnimationsAsync(),
   ],
 };

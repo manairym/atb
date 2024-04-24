@@ -1,21 +1,15 @@
-export class Users {
-  id: number;
+export class User {
+  id!: number;
+  firstName: string;
+  lastName: string;
   email: string;
-  fullName: string;
-  identifier: number;
-  phonenumber : string;
-  accountStatus: string;
-  job : string;
-  role : string;
+  password !: string;
+  status !: boolean;
+  role !: string;
 
   constructor() {
-    this.id = 0;
+    this.firstName = "";
+    this.lastName = "";
     this.email = "";
-    this.fullName = "";
-    this.identifier = 0;
-    this.phonenumber ="";
-    this.accountStatus = "";
-    this.job = "";
-    this.role = "";
   }
 }

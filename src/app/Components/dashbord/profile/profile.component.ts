@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { Users } from '../../../Models/users';
 import { NgIf } from '@angular/common';
 import {
   FormControl,
@@ -14,6 +13,9 @@ import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { ErrorsStateMatcher } from '../../../Models/ErrorStateMatcher';
+import {User} from "../../../Models/users";
+import {TokenStorageService} from "../../../Services/token.service";
+import {UserService} from "../../../Services/user.service";
 const LogoImgPath =
   'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp';
 
@@ -34,40 +36,59 @@ const LogoImgPath =
   styleUrl: './profile.component.css',
 })
 export class ProfileComponent implements OnInit {
-  imageProfile!: SafeUrl;
-  user: Users = {
-    accountStatus: 'Active',
-    email: 'foulenbenfoulen@gmail.com',
-    fullName: 'foulen ben foulen',
-    id: 0,
-    identifier: 2244,
-    job: 'agent',
-    phonenumber: '88888888',
-    role: '',
+  user: User = {
+    email: "", firstName: "", id: 0, lastName: "", password: "", role: "", status: true
   };
-  uploadedImage!: any;
+
 
   constructor(
     private _snackBar: MatSnackBar,
-    private sanitizer: DomSanitizer
-  ) {}
+    private sanitizer: DomSanitizer,
+    private tokenStorage: TokenStorageService,
+    private userService : UserService,
+    private MatSnackBar : MatSnackBar
+  ) {
+    this.user.id = this.tokenStorage.getUser() as number;
+    this.refreshProfile();
+
+  }
 
   ngOnInit(): void {
-    this.getImage(this.user.identifier);
+        throw new Error('Method not implemented.');
+    }
+  refreshProfile() {
+    this.getImage(this.user.id);
+    this.userService.get(this.user.id).subscribe(
+      (res: User) => {
+        this.user.firstName = res.firstName;
+        this.user.lastName = res.lastName;
+        this.user.email = res.email
+        // Initialize form controls with user data
+        this.form.patchValue({
+          email: this.user.email,
+          firstName: this.user.firstName,
+          lastName: this.user.lastName
+        });
+      },
+      () => {
+        this.MatSnackBar.open('Error while loading user Infos', 'Close', {
+          duration: 2000,
+          panelClass: ['red-snackbar'],
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+        });
+      }
+    );
   }
 
-  // Method to get profile picture
-  getImage(userId: any) {
-    // let objectURL = URL.createObjectURL(res);
-    // this.imageProfile = this.sanitizer.bypassSecurityTrustUrl(objectURL);
-    this.imageProfile = LogoImgPath;
-  }
+
+
 
   // Form validators
   form: FormGroup = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
-    fullName: new FormControl('', [Validators.required]),
-    phone: new FormControl('', [Validators.required, Validators.minLength(8)]),
+    email: new FormControl(this.user.email , [Validators.required, Validators.email]),
+    lastName: new FormControl(this.user.lastName, [Validators.required]),
+    firstName: new FormControl(this.user.firstName, [Validators.required]),
   });
   matcher = new ErrorsStateMatcher();
 
@@ -75,33 +96,52 @@ export class ProfileComponent implements OnInit {
   get email() {
     return this.form.get('email');
   }
-  get phone() {
-    return this.form.get('phone');
+  get lastName() {
+    return this.form.get('lastName');
   }
-  get fullName() {
-    return this.form.get('fullName');
+  get firstName() {
+    return this.form.get('firstName');
   }
 
   // Method invoked on form submission
   onSubmit() {
-    const profileInfo = {
-      email: this.email?.value,
-      password: this.fullName?.value,
-    };
-    console.log(profileInfo);
+    this.user.firstName = this.firstName?.value;
+    this.user.email = this.email?.value;
+    this.user.lastName = this.lastName?.value;
+    console.log(this.user);
     if (this.form.valid) {
-      console.log(this.form);
-      this.user.fullName = this.fullName?.value;
-      this.user.email = this.email?.value;
-      this.user.phonenumber = this.phone?.value;
+      this.userService.Update(this.user.id,this.user).subscribe(
+        (res: any) => {
+          this._snackBar.open('Change Success', '✅');
+          window.location.reload();
+          console.log(res);
 
-      this._snackBar.open('Change Success', '✅');
+        },
+        (error) => {
+          console.log(error);
+          this._snackBar.open('Server Error :' +error.message, '❌');
+        }
+      );
     } else {
       this._snackBar.open('Enter valid information !!!', '❌');
     }
   }
 
   // Method to handle image upload
+  imageProfile!: SafeUrl;
+  uploadedImage!: any;
+  // Method to get profile picture
+  getImage(userId: number) {
+    this.userService.getFile(userId).subscribe(
+      (res: any) => {
+        let objectURL = URL.createObjectURL(res);
+        this.imageProfile = this.sanitizer.bypassSecurityTrustUrl(objectURL);
+      },
+      () => {
+        this.imageProfile = LogoImgPath;
+      }
+    );
+  }
   onImageUpload(event: any) {
     this.uploadedImage = event.target.files[0];
     this.imageUploadAction();
@@ -111,5 +151,21 @@ export class ProfileComponent implements OnInit {
   imageUploadAction() {
     const imageFormData = new FormData();
     imageFormData.append('file', this.uploadedImage);
+    this.userService.uploadImage(this.user.id as number, imageFormData).subscribe(
+      (response: any) => {
+        console.log(response.status);
+        this.getImage(this.user.id as number);
+        window.location.reload();
+      },
+      (error) => {
+        this.MatSnackBar.open('Error while uploading your Image', 'Close', {
+          duration: 2000,
+          panelClass: ['red-snackbar'],
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+        });
+      }
+    );
+
   }
 }

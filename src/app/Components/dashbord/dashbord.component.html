@@ -95,7 +95,7 @@
       <form></form>
       <a aria-disabled="true" class="profile" routerLink="/Dashboard/Profile">
         <img [src]="imageProfile" alt="user Image Profile" />
-        {{ userData.fullName }}
+        {{ userData.lastName + userData.firstName }}
       </a>
       <label class="switch">
         <input type="checkbox" [checked]="darkMode" (change)="modeChanges()" />

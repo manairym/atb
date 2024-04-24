@@ -13,9 +13,9 @@
     <li class="table-row" *ngFor="let user of users">
       <div class="col col-1" data-label="id">{{user.id}}</div>
       <div class="col col-2" data-label="Email">{{user.email}}</div>
-      <div class="col col-2" data-label="Full Name">{{user.fullName}}</div>
-      <div class="col col-3" data-label="Identifier">{{user.identifier}}</div>
-      <div class="col col-4" data-label="Account Status"><button [class]="user.accountStatus == 'Active' ?'btn btn-success btn-rounded' :  'btn btn-danger btn-rounded'" disabled>{{user.accountStatus}}</button></div>
+      <div class="col col-2" data-label="Full Name">{{user.firstName}}</div>
+      <div class="col col-3" data-label="Identifier">{{user.lastName}}</div>
+      <div class="col col-4" data-label="Account Status"><button [class]="user.status == true ?'btn btn-success btn-rounded' :  'btn btn-danger btn-rounded'" disabled>{{user.status}}</button></div>
     </li>
   </ul>
 </div>

@@ -19,8 +19,8 @@
                 />
               </div>
               <div class="mt-3">
-                <h4>{{ user.fullName }}</h4>
-                <p class="text-secondary mb-1">{{ user.job }}</p>
+                <h4>{{ user.lastName }}</h4>
+                <p class="text-secondary mb-1">{{ user.role }}</p>
                 <button
                   type="button"
                   class="btn btn-primary"
@@ -39,10 +39,19 @@
           <div class="card-body">
             <div class="row">
               <div class="col-sm-3">
-                <h6 class="mb-0">Full Name</h6>
+                <h6 class="mb-0">Frist Name</h6>
               </div>
               <div class="col-sm-9 text-secondary">
-                {{ user.fullName }}
+                {{ user.firstName }}
+              </div>
+            </div>
+            <hr />
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">Last Name</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                {{ user.lastName }}
               </div>
             </div>
             <hr />
@@ -57,38 +66,20 @@
             <hr />
             <div class="row">
               <div class="col-sm-3">
-                <h6 class="mb-0">Phone</h6>
-              </div>
-              <div class="col-sm-9 text-secondary">
-                {{ user.phonenumber }}
-              </div>
-            </div>
-            <hr />
-            <div class="row">
-              <div class="col-sm-3">
-                <h6 class="mb-0">Identifier</h6>
-              </div>
-              <div class="col-sm-9 text-secondary">
-                {{ user.identifier }}
-              </div>
-            </div>
-            <hr />
-            <div class="row">
-              <div class="col-sm-3">
                 <h6 class="mb-0">Account Status</h6>
               </div>
               <div class="col-sm-9 text-secondary">
                 <button
                   class="btn btn-success"
                   disabled
-                  *ngIf="user.accountStatus == 'Active'"
+                  *ngIf="user.status == true"
                 >
                   Active
                 </button>
                 <button
                   class="btn bn-danger"
                   disabled
-                  *ngIf="user.accountStatus == 'Suspended'"
+                  *ngIf="user.status == false"
                 >
                   Suspended
                 </button>
@@ -113,7 +104,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Edit Profile</h5>
         <button
           type="button"
           class="close"
@@ -125,20 +116,36 @@
       </div>
       <div class="modal-body">
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
-          <!-- fullName input -->
+          <!-- firstName input -->
           <mat-form-field class="form-group mb-3">
-            <mat-label class="form-label" for="fullName"> fullName </mat-label>
+            <mat-label class="form-label" for="firstName"> First Name </mat-label>
             <input
               matInput
               type="text"
-              id="fullName"
-              formControlName="fullName"
+              id="firstName"
+              formControlName="firstName"
               [errorStateMatcher]="matcher"
-              name="fullName"
+              name="firstName"
               required
             />
-            <mat-error *ngIf="fullName?.hasError('required')">
-              fullName is <strong>required</strong>
+            <mat-error *ngIf="firstName?.hasError('required')">
+              first Name is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+          <!-- lastName input -->
+          <mat-form-field class="form-group mb-3">
+            <mat-label class="form-label" for="lastName"> Last Name </mat-label>
+            <input
+              matInput
+              type="text"
+              id="lastName"
+              formControlName="lastName"
+              [errorStateMatcher]="matcher"
+              name="lastName"
+              required
+            />
+            <mat-error *ngIf="lastName?.hasError('required')">
+              last Name is <strong>required</strong>
             </mat-error>
           </mat-form-field>
           <!-- Email input -->
@@ -162,35 +169,6 @@
             </mat-error>
             <mat-error *ngIf="email?.hasError('required')">
               Email is <strong>required</strong>
-            </mat-error>
-          </mat-form-field>
-          <!-- Phone input -->
-          <mat-form-field class="form-group mb-3" appearance="fill">
-            <mat-label class="form-label" for="Phone">
-              <i class="me-3"><mat-icon>lock</mat-icon></i> Phone
-            </mat-label>
-            <input
-              matInput
-              type="text"
-              id="phone"
-              formControlName="phone"
-              [errorStateMatcher]="matcher"
-              name="phone"
-              required
-            />
-            <mat-error
-              *ngIf="
-                phone?.hasError('minlength') && !phone?.hasError('required')
-              "
-            >
-              Phone must have
-              <strong>{{phone?.errors?.['minlength'].requiredLength}}</strong>
-              Numbers ,You have Submitted
-              <strong>{{phone?.errors?.['minlength'].actualLength}}</strong>
-              Numbers
-            </mat-error>
-            <mat-error *ngIf="phone?.hasError('required')">
-              Password is <strong>required</strong>
             </mat-error>
           </mat-form-field>
           <!--Login Button -->
