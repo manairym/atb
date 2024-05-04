@@ -29,7 +29,6 @@ export class AuthGuard implements CanActivate {
     console.log(jwtToken);
     const userRole = this.authService.getRole();
     if (!jwtToken) {
-      this._snackBar.open('Access Denied !!!', '❌');
       this.router.navigate(['/login'], {
         queryParams: { returnUrl: state.url },
       });

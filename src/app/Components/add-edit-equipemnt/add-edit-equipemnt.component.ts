@@ -62,11 +62,11 @@ export class AddEditEquipemntComponent implements OnInit {
         this.equipmentService.Update(this.equipmentId, equipmentData).subscribe(
           () =>
         {
-          this.router.navigate(['/equipments']);
+          this.router.navigate(['/Dashboard/Equipements']);
         });
       } else {
         this.equipmentService.Create(equipmentData).subscribe({
-          next: () => this.router.navigate(['/equipments']),
+          next: () => this.router.navigate(['/Dashboard/Equipements']),
           error: () => console.error("errror")
         });
       }

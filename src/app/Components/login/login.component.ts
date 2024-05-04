@@ -131,6 +131,7 @@ export class LoginComponent {
     this.SubsInfo.lastName = this.lastName?.value;
     this.SubsInfo.email = this.emailSubs?.value;
     this.SubsInfo.password = this.passwordSubs?.value;
+    this.SubsInfo.privilege = "NONE";
     console.log(this.formSubs);
     if (this.formSubs.valid) {
       this.entryService.signUp(this.SubsInfo)
