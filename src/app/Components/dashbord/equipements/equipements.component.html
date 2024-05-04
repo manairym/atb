@@ -1,3 +1,6 @@
+
+<button *ngIf="user.privilege == 'ADD' || user.privilege == 'ALL'" class="btn btn-primary" style="margin-bottom: 10px" routerLink="/Dashboard/Equipements/add">Ajouter Equipement</button>
+
 <div class="table-responsive">
   <table class="table table-striped">
     <caption>
@@ -10,6 +13,8 @@
         <th scope="col">Date d'entree</th>
         <th scope="col">Date de sortie</th>
         <th scope="col">Name</th>
+        <th scope="col" *ngIf="user.privilege == 'DELETE' ||user.privilege == 'EDIT' || user.privilege == 'ALL'">Actions</th>
+
       </tr>
     </thead>
     <tbody>
@@ -19,6 +24,16 @@
         <td>{{ equipement.entree | date }}</td>
         <td>{{ equipement.sortie | date }}</td>
         <td>{{ equipement.name }}</td>
+        <td>
+          <div>
+            <button *ngIf="user.privilege == 'EDIT' || user.privilege == 'ALL'" class="button" data-toggle="modal" data-target="#editModal" [routerLink]="['/Dashboard/Equipements/edit',equipement.id]">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button *ngIf="user.privilege == 'DELETE' || user.privilege == 'ALL'" class="button" (click)="delete(equipement.id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </td>
       </tr>
     </tbody>
   </table>

@@ -25,8 +25,7 @@ export class DashbordComponent implements OnInit {
 
   // User data object
   userData: User = {
-    email: "", firstName: "", id: 0, lastName: "", password: "", role: "", status: true
-
+    email: "", firstName: "", id: 0, lastName: "", password: "", privilege: "", role: "", status: false
   };
 
   // Status variable
@@ -34,7 +33,7 @@ export class DashbordComponent implements OnInit {
 
   // Image profile variable
   imageProfile!: SafeUrl;
-
+  userRole : string ="";
   constructor(
     private tokenStorageService: TokenStorageService,
     private EService: EntryService,
@@ -42,8 +41,8 @@ export class DashbordComponent implements OnInit {
     private MatSnackBar: MatSnackBar,
     private userService: UserService
   ) {
+    this.userRole = this.tokenStorageService.getRole() as string;
   }
-
   ngOnInit(): void {
     this.isLoggedIn =!!this.tokenStorageService.getToken();
     // Method to initialize component
@@ -56,6 +55,7 @@ export class DashbordComponent implements OnInit {
     this.getImage(userAuth as number);
     this.userService.get(userAuth).subscribe((res: User) => {
       this.userData = res;
+      console.log(res);
     },(error)=>{
       this.MatSnackBar.open(error.error.message,'❌',{
         duration: 3000

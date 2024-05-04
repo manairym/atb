@@ -11,6 +11,7 @@ import {AuthGuard} from "./Guard/auth.guard";
 import {SecureInnerPagesGuard} from "./Guard/secure-inner-pages.guard";
 import {ResetPasswordComponent} from "./Components/reset-password/reset-password.component";
 import {ResetEmailComponent} from "./Components/reset-email/reset-email.component";
+import {AddEditEquipemntComponent} from "./Components/add-edit-equipemnt/add-edit-equipemnt.component";
 
 export const routes: Routes = [
   {
@@ -43,7 +44,7 @@ export const routes: Routes = [
         component: StatisticsComponent,
         canActivate : [AuthGuard],
         data: {
-          role: ['Admin','User']
+          role: ['ADMIN','USER']
         }
       },
       {
@@ -51,7 +52,7 @@ export const routes: Routes = [
         component: UsersComponent,
         canActivate : [AuthGuard],
         data: {
-          role: ['Admin']
+          role: ['ADMIN']
         }
       },
       {
@@ -67,7 +68,7 @@ export const routes: Routes = [
         component : PrivilegeComponent,
         canActivate : [AuthGuard],
         data: {
-          role: ['Admin']
+          role: ['ADMIN','USER']
         }
       },
       {
@@ -75,7 +76,23 @@ export const routes: Routes = [
         component : EQUIPEMENTSComponent,
         canActivate : [AuthGuard],
         data: {
-          role: ['Admin','User']
+          role: ['ADMIN','USER']
+        }
+      },
+      {
+        path : 'Equipements/add',
+        component : AddEditEquipemntComponent,
+        canActivate : [AuthGuard],
+        data: {
+          role: ['ADMIN','USER']
+        }
+      },
+      {
+        path : 'Equipements/edit/:id',
+        component : AddEditEquipemntComponent,
+        canActivate : [AuthGuard],
+        data: {
+          role: ['ADMIN','USER']
         }
       },
       {

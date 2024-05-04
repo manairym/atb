@@ -13,6 +13,9 @@ import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import {UserService} from "../../../Services/user.service";
+import {MatOption} from "@angular/material/autocomplete";
+import {MatSelect} from "@angular/material/select";
+import {EntryService} from "../../../Services/entry.service";
 
 @Component({
   selector: 'app-users',
@@ -27,13 +30,15 @@ import {UserService} from "../../../Services/user.service";
     MatLabel,
     NgIf,
     ReactiveFormsModule,
+    MatOption,
+    MatSelect,
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css',
 })
 export class UsersComponent {
   users: User[] = [];
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService,private entryservice : EntryService) {
     userService.getAll().subscribe(
       (data) => {
         this.users = data;
@@ -50,40 +55,103 @@ export class UsersComponent {
   matcher = new ErrorsStateMatcher();
 
   formSubs: FormGroup = new FormGroup({
-    nom: new FormControl('', [Validators.required]),
-    emailSubs: new FormControl('', [Validators.required, Validators.email]),
-    identificateur: new FormControl('', [Validators.required]),
-    passwordSubs: new FormControl('', [
+    email: new FormControl('', [Validators.required, Validators.email]),
+    firstName: new FormControl('', [Validators.required]),
+    lastName: new FormControl('', [Validators.required]),
+    privilege: new FormControl('', [Validators.required]),
+    password: new FormControl('', [
       Validators.required,
       Validators.minLength(8),
     ]),
   });
 
   // Get all Form Fields
-  get nom() {
-    return this.formSubs.get('nom');
+  get email() {
+    return this.formSubs.get('email');
   }
-  get emailSubs() {
-    return this.formSubs.get('emailSubs');
+  get firstName() {
+    return this.formSubs.get('firstName');
   }
-  get identificateur() {
-    return this.formSubs.get('identificateur');
+  get lastName() {
+    return this.formSubs.get('lastName');
   }
-  get passwordSubs() {
-    return this.formSubs.get('passwordSubs');
+  get password() {
+    return this.formSubs.get('password');
   }
+  get privilege() {
+    return this.formSubs.get('privilege');
+  }
+
+  selectedUser : User = {
+    email: "", firstName: "", id: 0, lastName: "", password: "", privilege: "", role: "", status: false
+  };
 
   // Method invoked on form submission
   onSubmit() {
-    const addInfos = {
-      nom: this.nom?.value,
-      email: this.emailSubs?.value,
-      identificateur: this.identificateur?.value,
-      password: this.passwordSubs?.value,
-    };
-    console.log(addInfos);
-    if (this.formSubs.valid) {
-      console.log(this.formSubs);
+    if(this.selectedUser.firstName== ""){
+      const addInfos = {
+        email: this.email?.value,
+        password: this.password?.value,
+        firstName: this.firstName?.value,
+        lastName: this.lastName?.value,
+        privilege: this.formSubs.get('privilege')?.value,
+      };
+      this.entryservice.signUp(addInfos).subscribe(
+        (res: any) => {
+          console.log(res);
+          window.location.reload();
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    }else{
+      const modifInfos = {
+        email: this.email?.value,
+        password: this.password?.value,
+        firstName: this.firstName?.value,
+        lastName: this.lastName?.value,
+        privilege: this.formSubs.get('privilege')?.value,
+      };
+      this.userService.Update(this.selectedUser.id,modifInfos).subscribe(
+        (res: any) => {
+          console.log(res);
+          window.location.reload();
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    }
+  }
+
+
+  delete(id : number){
+    this.userService.Delete(id).subscribe(
+      ()=>{
+        console.log('User deleted successfully.');
+        window.location.reload();
+      },
+      (error)=>{
+        console.log(error);
+      }
+    )
+  }
+
+  edit(user : User){
+    this.selectedUser = user;
+    this.formSubs.patchValue({
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      privilege: user.privilege,
+    });
+  }
+
+  emptyModal(){
+    this.selectedUser = {
+      email: "", firstName: "", id: 0, lastName: "", password: "", privilege: "", role: "", status: false
+
     }
   }
 }

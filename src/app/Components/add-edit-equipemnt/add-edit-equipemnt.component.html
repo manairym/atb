@@ -1,0 +1,22 @@
+<div class="container">
+  <h2>{{ isEditMode ? 'Edit' : 'Add' }} Equipment</h2>
+  <form [formGroup]="equipmentForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" id="name" class="form-control" formControlName="name" required>
+    </div>
+    <div class="form-group">
+      <label for="category">Category:</label>
+      <input type="text" id="category" class="form-control" formControlName="category" required>
+    </div>
+    <div class="form-group">
+      <label for="entree">Entry Date:</label>
+      <input type="date" id="entree" class="form-control" formControlName="entree" required>
+    </div>
+    <div class="form-group">
+      <label for="sortie">Exit Date:</label>
+      <input type="date" id="sortie" class="form-control" formControlName="sortie" required>
+    </div>
+    <button type="submit" class="btn btn-primary">{{ isEditMode ? 'Update' : 'Add' }}</button>
+  </form>
+</div>

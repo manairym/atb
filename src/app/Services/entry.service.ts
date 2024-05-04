@@ -15,7 +15,7 @@ export class EntryService {
   signIn(data :{email : string,password : string}): Observable<any>{
     return this.http.post(`${APIUrl}authenticate`, data)
   }
-  signUp(data :User): Observable<any>{
+  signUp(data :any): Observable<any>{
     return this.http.post(`${APIUrl}register`, data)
   }
 

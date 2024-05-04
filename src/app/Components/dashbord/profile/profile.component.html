@@ -72,14 +72,14 @@
                 <button
                   class="btn btn-success"
                   disabled
-                  *ngIf="user.status == true"
+                  *ngIf="user.status"
                 >
                   Active
                 </button>
                 <button
                   class="btn bn-danger"
                   disabled
-                  *ngIf="user.status == false"
+                  *ngIf="!user.status"
                 >
                   Suspended
                 </button>

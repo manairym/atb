@@ -6,10 +6,12 @@ export class User {
   password !: string;
   status !: boolean;
   role !: string;
+  privilege !: string;
 
   constructor() {
     this.firstName = "";
     this.lastName = "";
     this.email = "";
+    this.privilege = "";
   }
 }

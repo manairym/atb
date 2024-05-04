@@ -16,7 +16,7 @@ export class TokenStorageService {
     window.sessionStorage.setItem(TOKEN_KEY, token);
     this.saveRole();
   }
-  public getUser():number | null{
+  public getUser():number{
     const jwtToken = this.getToken();
     const decodedToken: any = this.getToken() != null ? jwtDecode(jwtToken as string) : null;
     const userId = decodedToken != null ? decodedToken?.jti : null;

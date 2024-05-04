@@ -36,7 +36,7 @@ h2 {
     flex-basis: 10%;
   }
   .col-2 {
-    flex-basis: 40%;
+    flex-basis: 25%;
   }
   .col-3 {
     flex-basis: 25%;
@@ -44,6 +44,7 @@ h2 {
   .col-4 {
     flex-basis: 25%;
   }
+
 
   @media all and (max-width: 767px) {
     .table-header {
@@ -81,6 +82,19 @@ h2 {
   padding: 1rem;
   font-size: 1rem;
   width: 10em;
+  border-radius: 1rem;
+  color: lightcoral;
+  box-shadow: 0 0.4rem #dfd9d9;
+  cursor: pointer;
+}
+
+
+.button-e {
+  background-color: #eee;
+  border: none;
+  padding: 1rem;
+  font-size: 1rem;
+  width: 40px;
   border-radius: 1rem;
   color: lightcoral;
   box-shadow: 0 0.4rem #dfd9d9;

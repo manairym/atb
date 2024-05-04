@@ -37,7 +37,7 @@ const LogoImgPath =
 })
 export class ProfileComponent implements OnInit {
   user: User = {
-    email: "", firstName: "", id: 0, lastName: "", password: "", role: "", status: true
+    email: "", firstName: "", id: 0, lastName: "", password: "", privilege: "", role: "", status: false
   };
 
 
@@ -63,6 +63,7 @@ export class ProfileComponent implements OnInit {
         this.user.firstName = res.firstName;
         this.user.lastName = res.lastName;
         this.user.email = res.email
+        this.user.status = res.status;
         // Initialize form controls with user data
         this.form.patchValue({
           email: this.user.email,
